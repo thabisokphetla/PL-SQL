@@ -1,0 +1,149 @@
+Lesson 6
+Question1
+-------------
+
+a) VARIABLE p_ord_id NUMBER
+   SET SERVEROUTPUT ON
+   DECLARE
+	CURSOR ord_cursor IS
+	   SELECT item_id,product_id,name,quantity
+	     FROM s_item I,s_product P
+	     WHERE  I.ord_id = &p_ord_id
+	     AND   I.product_id = P.id
+	     ORDER BY    item_id;
+	v_item_id    s_item.item_id%TYPE;
+	v_prod_id    s_item.product_id%TYPE;
+	v_name       s_product.name%TYPE;
+	v_quantity   s_item.quantity%TYPE;
+   BEGIN
+      OPEN ord_cursor;
+      LOOP
+	FETCH   ord_cursor
+	    INTO    v_item_id, v_prod_id, v_name, v_quantity;
+	EXIT WHEN          ord_cursor%NOTFOUND OR 
+			   ord_cursor%NOTFOUND IS NULL;
+	DBMS_OUTPUT.PUT_LINE('Item '||v_item_id||': '||v_quantity||' of '||v_prod_id||' ('||v_name||') ordered');
+      END LOOP;
+CLOSE ord_cursor;
+END;
+/
+
+Question 2
+--------------
+
+VARIABLE p_ord_id NUMBER
+   SET SERVEROUTPUT ON
+   DECLARE
+	CURSOR ord_cursor IS
+	   SELECT product_id,name,quantity
+	     FROM s_item I,s_product P
+	     WHERE  I.ord_id = &p_ord_id
+	     AND   I.product_id = P.id
+	     ORDER BY    item_id;
+	v_prod_id    s_item.product_id%TYPE;
+	v_name       s_product.name%TYPE;
+	v_quantity   s_item.quantity%TYPE;
+   BEGIN
+      OPEN ord_cursor;
+      LOOP
+	FETCH   ord_cursor
+	    INTO     v_prod_id, v_name, v_quantity;
+	EXIT WHEN          ord_cursor%NOTFOUND OR 
+			   ord_cursor%ROWCOUNT > 3;
+	DBMS_OUTPUT.PUT_LINE('Item '||ord_cursor%ROWCOUNT||': '||v_quantity||' of '||v_prod_id||' ('||v_name||') ordered');
+      END LOOP;
+CLOSE ord_cursor;
+END;
+/
+
+Question3
+---------------
+
+VARIABLE p_ord_id NUMBER
+   SET SERVEROUTPUT ON
+   DECLARE
+	CURSOR ord_cursor IS
+	 SELECT *
+	   FROM s_item
+	   WHERE ord_id = &p_ord_id
+	   ORDER BY item_id;
+ 	ord_rec ord_cursor%ROWTYPE;
+   BEGIN	
+	OPEN   ord_cursor;
+	LOOP
+	   FETCH  ord_cursor
+		INTO ord_rec;
+	   EXIT  WHEN        ord_cursor%NOTFOUND OR
+			     ord_cursor%NOTFOUND IS NULL;
+	   DBMS_OUTPUT.PUT_LINE('Item '||ord_rec.item_id||': '||ord_rec.quantity||' of '||ord_rec.product_id||' ordered');
+   END LOOP;
+   CLOSE ord_cursor;
+   END;
+   /
+
+Question4
+--------------
+VARIABLE p_ord_id NUMBER
+   SET SERVEROUTPUT ON
+   DECLARE
+	CURSOR ord_cursor IS
+	   SELECT  product_id,name,quantity
+	   FROM    s_item I,s_product P
+	  WHERE  I.ord_id = &p_ord_id
+	  AND   I.product_id = P.id
+	  ORDER BY    item_id;
+	TYPE ord_rec_type   IS RECORD
+	(v_prod_id    s_item.product_id%TYPE;
+	v_name       s_product.name%TYPE;
+	v_quantity   s_item.quantity%TYPE);
+	ord_rec    ord_rec_type;
+   BEGIN
+	OPEN   ord_cursor;
+	LOOP
+	  FETCH ord_cursor
+		INTO   ord_rec;
+	EXIT WHEN          ord_cursor%NOTFOUND OR 
+			   ord_cursor%ROWCOUNT > 3;
+	DBMS_OUTPUT.PUT_LINE('Item '||ord_cursor%ROWCOUNT||': '||ord_rec.v_quantity||' of '||ord_rec.v_prod_id||' ('||ord_rec.v_name||' ) ordered');
+	END LOOP;
+   CLOSE ord_cursor;
+   END;
+   /
+
+Question 5
+VARIABLE p_ord_id NUMBER
+   SET SERVEROUTPUT ON
+   DECLARE
+	CURSOR ord_cursor IS
+	   SELECT  product_id,name,quantity
+	   FROM    s_item I,s_product P
+	  WHERE  I.ord_id = &p_ord_id
+	  AND   I.product_id = P.id
+	  ORDER BY    item_id;
+	
+   BEGIN
+	FOR   ord_rec IN ord_cursor LOOP
+	DBMS_OUTPUT.PUT_LINE('Item '||ord_cursor%ROWCOUNT||': '||ord_rec.quantity||' of '||ord_rec.product_id||' ('||ord_rec.name||' ) ordered');
+	END LOOP;
+   CLOSE ord_cursor;
+   END;
+
+
+Question 6	
+	FOR   ord_rec IN(
+			   SEELCT  product_id,name,quantity
+			   FROM  s_item I,s_product P
+			   WHERE  I.ord_id  = &p_ord_id
+			   AND   I.product_id = P.id
+			   ORDER BY   item_id)
+	LOOP
+	  DBMS_OUTPUT.PUT_LINE('Item '||SQL%ROWCOUNT||': '||ord_rec.quantity||' of '||ord_rec.product_id||' ordered);
+	END LOOP;
+   CLOSE ord_cursor;
+   END;
+
+
+
+
+
+

@@ -1,0 +1,134 @@
+QUESTION2
+---------
+
+DEFINE staffnr = 800700
+DECLARE
+-----------------------------------------------------------------------------------------------------------
+QUESTION2
+---------
+
+
+DECLARE
+ TYPE staff_record_type IS RECORD
+  (initials s_staff.initials%TYPE,
+   surname s_staff.surname%TYPE,
+   job  s_staff.job%TYPE,
+   sal  s_staff.salARY%TYPE,
+   bonus  s_staff.bonus%TYPE,
+   income  s_staff.salary%TYPE) ;
+   staff_rec staff_record_type;
+ v_staffnr  s_staff.staffnr%TYPE := &g_staffnr;
+BEGIN
+ SELECT initials,surname,job,NVL(salary,0)/12,
+  NVL(bonus,0),(NVL(salary,0)/12 + NVL(bonus,0))
+ INTO   staff_rec
+ FROM   s_staff
+ WHERE  staffnr = v_staffnr;
+ DBMS_OUTPUT.PUT_LINE (staff_rec.initials||' '||staff_rec.surname||', a '||staff_rec.job||'- SALARY: '||
+  staff_rec.sal||' ;Bonus: '||staff_rec.bonus||' ; Income: '||staff_rec.income) ;
+END;
+/
+
+BB PRETORIUS, a LECTURER- SALARY: 7500 ;Bonus: 6000 ; Income: 13500
+
+
+MA HONEYBALL, a SPECIALIST- SALARY: 10000 ;Bonus: 0 ; Income: 10000
+-------------------------------------------------------------------------------------------------------------------
+QUESTION3
+---------
+
+a) CREATE TABLE s_dip_copy AS
+	SELECT *
+	FROM s_diploma;
+
+b) ALTER TABLE s_dip_copy
+   ADD dip_nr	NUMBER(2);
+
+c) UPDATE s_dip_copy
+   SET dip_nr = &dip_nr
+   WHERE dip_code = &dip_code;
+
+d)
+
+SET SERVEROUTPUT ON
+DECLARE
+	TYPE dip_table_type IS TABLE OF
+	  s_dip_copy.dip_name%TYPE
+	  INDEX BY 	BINARY_INTEGER;
+	my_dip_table  	dip_table_type;
+	v_count		NUMBER(2);
+
+BEGIN
+	SELECT 	COUNT(*)
+	INTO	v_count
+	FROM	s_dip_copy;
+
+	FOR i IN 1..v_count LOOP
+		SELECT dip_name
+		INTO my_dip_table
+		FROM s_dip_copy
+		WHERE dip_nr = i*10;
+	END LOOP;
+
+	FOR i IN 1..v_count LOOP
+		DBMS_OUTPUT.PUT_LINE(my_dip_table(i));
+	END LOOP;
+END;
+/
+
+
+DECLARE
+v_count NUMBER := 6;
+v_dip_nr	NUMBER(2);
+BEGIN
+ FOR i IN 1..6 LOOP
+  DBMS_OUTPUT.PUT_LINE( i*10);
+ END LOOP;
+END;
+/
+
+-----------------------------------------------------------------------------------------------------
+QUESTION4
+---------
+
+DECLARE
+	TYPE dip_table_type IS TABLE OF
+		s_dip_copy%ROWTYPE
+		INDEX BY BINARY_INTEGER;
+	
+	my_dip_table   dip_table_type;
+	v_answear BOOLEAN;
+	v_count	NUMBER;
+
+BEGIN
+	SELECT COUNT(*)
+	INTO v_count
+	FROM s_dip_copy;
+
+	FOR i IN 1..c_count LOOP
+		SELECT *
+		INTO my_dip_table(i)
+		FROM s_dip_copy
+		WHERE dip_nr = i*10;
+	END LOOP;
+
+	FOR i IN 1..v_count LOOP
+		DBMS_OUTPUT.PUT_LINE('Diploma number '||
+			INITCAP(my_dip_copy(i).dip_name)) ;
+	END LOOP;
+
+	v_answer := my_dip_copy.EXISTS(6);
+	IF v_answer = TRUE THEN
+		my_dip_copy.DELETE(6);
+	ELSE
+		DBMS_OUTPUT.PUT_LINE('Element(6) does not exist ');
+	END IF;
+
+
+	v_answer := my_dip_copy.EXISTS(6);
+	IF v_answer = TRUE THEN
+		DBMS_OUTPUT.PUT_LINE('Element(6) has been deleted');
+	END IF;
+
+END;
+/

@@ -1,0 +1,64 @@
+Q1
+
+ SET SERVEROUTPUT ON
+ DECLARE v_output VARCHAR2(20) NOT NULL;
+
+ BEGIN
+ SELECT INITCAP(fname)||' ' || lname
+ INTO v_output
+ FROM bk_author
+ WHERE authorid = &p_id; 
+ DBMS OUTPUT.PUT_LINE('The author name is ' || v_output);
+ END;
+
+
+
+
+
+DECLARE
+
+v_isbn VARCHAR2(10)  := &p_isbn;
+v_isbn VARCHAR2(10)  := '8843172113';
+
+
+
+Q2
+
+VARIABLE g_message VARCHAR2(20) 
+
+BEGIN
+	SELECT 'Today is Sunday, '||
+		TO_CHAR(SYSDATE,'fmdd Month YYYY fmHH:MI:SS') as Today
+	INTO :g_message
+	FROM DUAL;
+END;
+/
+
+Q3
+
+
+DECLARE 
+  v_sal     NUMBER(6,1) := &p_sal;
+  V_new_sal NUMBER(6,1);--OR v_sal%TYPE;
+
+BEGIN 
+  v_sal := v_sal *1.075;
+  DBMS OUTPUT.PUT_LINE('Your current salary is R' || v_sal || 'and your increased salary iS R' || v_new_sal);
+
+END;
+
+  
+
+EXAMPLE
+
+  BEGIN
+   x :=10;
+   y := 2 * x;
+   BEGIN
+    Y := X;
+    Z := 3 * Y;
+
+END;
+ X := X+Y;
+
+END;

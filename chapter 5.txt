@@ -1,0 +1,61 @@
+DEFINE g_empid = 24
+DECLARE 
+	emp_rec	s_emp%ROWRYPE;
+	v_empid	s_emp.id%TYPE := &gempid;
+BEGIN
+	SELECT *
+		INTO emp_rec
+		FROM s_emp
+		WHERE id = v_empid
+	DBMS_OUTPUT.PUT_LINE(emp_rec.first_name||' '||UPPER(emp_rec.last_name)||'''s salary is R'||emp_rec.salary||
+		'and she is a '||emp_rec.title);
+END;
+
+-----------------------------------------------------------------------------------------------------------------------------
+DEFINE p_empid = 14
+DECLARE
+	TYPE emp_record_type IS RECORD
+	(initial CHAR,
+	surname	s_emp.last_name%TYPE,
+	title	s_emp.title%TYPE,
+	sal	s_emp.salary%TYPE,
+	comm	sal%TYPE,
+	INCOME	s_emp.salary%TYPE);
+	emp_rec emp_record_type;
+	v_empid	s_emp.id%TYPE := &p_empid;
+BEGIN
+	SELECT SUBSTR(first_name,1,1),
+	UPPER(last_name),title, NVL(salary,0),
+	NVL(commission_pct,10)*NVL(salary,0)/100,
+	NULL
+	INTO emp_rec
+	FROM s_emp
+	WHERE id = v_empid
+emp_rec.income := emp_rec.sal + emp_rec.comm;
+DBMS_OUTPUT.PUT_LINE(emp_rec.initial||' '||
+emp_rec.surname||', a '||emp_rec.title||
+'- salary: R' ||emp_rec.comm||
+'; INCOME: R'||emp_rec.income
+	
+---------------------------------------------------------------------------------------------------------------------------------------
+DEFINE p_empid = 13
+DECLARE
+	region_rec s_region%ROWTYPE;
+	TYPE emp_record_typpe IS RECORD
+		(name s_emp.first_name%TYPE;
+		 surname s_emp.last_name%TYPE;
+		 dept_id s_emp.dept_id%TYPE;
+		 emp_rec emp_record_type;
+		 v_empid s_emp.id%TYPE := &p_empid;
+BEGIN
+	SELECT first_name,last_name,dept_id
+	INTO emp_rec
+	FROM s_emp
+	WHERE id = v_empid;
+SELECT R.id, R.name
+	INTO region_rec
+	FROM s_dept D, s_region R
+	WHERE emp_rec.dept_id = D.id
+	AND D.region_id = R.id;
+DBMS_OUTPUT.PUT_LINE(emp_rec.name||' '||emp_rec.surname||'Works in the '||region_rec.name||' region.');
+END;

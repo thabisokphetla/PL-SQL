@@ -1,0 +1,69 @@
+QUESTION1
+----------
+
+VARIABLE g_max_sal NUMBER;
+BEGIN
+	SELECT MAX(salary);
+	INTO :g_max_sal 
+	FROM s_staff
+	WHERE job = 'LECTURER';
+END;
+/
+
+
+PRINT g_max_sal
+
+ G_MAX_SAL
+----------
+    132000
+--------------------------------------------------------------------------------------------------------------------
+QUESTION2
+---------
+
+DEFINE g_job = 'LECTURE'
+BEGIN
+	SELECT MAX(salary)
+		INTO :g_max_sal 
+		FROM s_staff
+		WHERE job = 'LECTURER';
+
+	INSERT INTO s_staff
+      	(staffnr,surname,initials,office_nr,job,salary,bonus)
+    	VALUES
+    	(987653,'MADISON','JK','S33','&g_job',:g_max_sal+8000,NULL);
+ END;
+/
+
+
+
+   STAFFNR SURNAME         INIT OFF JOB                 SALARY      BONUS
+---------- --------------- ---- --- --------------- ---------- ----------
+    987653 MADISON         JK   S33 LECTURE             140000
+-------------------------------------------------------------------------------------------------------------------
+QUESTION3
+---------
+
+define p_staffnr = 987653
+DECLARE 
+	v_bonus s_staff.bonus%TYPE;
+BEGIN
+	SELECT salary*0.15
+		INTO v_bonus
+		FROM s_staff
+		WHERE staffnr = &p_staffnr;
+	DBMS_OUTPUT.PUT_LINE
+	( 'The bonus of '||&p_staffnr||' is R'||v_bonus);
+END;
+/
+
+
+The bonus of 987653 is R21000
+-------------------------------------------------------------------------------------------------------------------
+QUESTION4
+---------
+
+BEGIN 
+	DELETE FROM s_staff
+	WHERE staffnr = 987653;
+END;
+/

@@ -1,0 +1,54 @@
+DECLARE
+ TYPE rec_OBC IS RECORD 
+ (
+ quantity bk_orderitems.quantity%TYPE,
+  title  bk_books.title%TYPE,
+   AUTHORID bk_books.authorid%TYPE,
+   LINETOTAL bk_costs.retail%TYPE
+);
+	OBC rec_OBC;
+o_no bk_orderitems.order#%TYPE := &o_no;
+i_no bk_orderitems.item#%TYPE := &i_no;
+BEGIN
+
+SELECT  quantity ,title,authorid,retail*quantity 
+INTO OBC
+FROM  bk_orderitems ord,bk_books bk, bk_costs co
+WHERE ord.order# = o_no
+AND ord.item# = i_no 
+AND ord.isbn = bk.isbn
+and ord.isbn = co.isbn;
+
+DBMS_OUTPUT.PUT_LINE(' '||obc.quantity||' OF '||obc.title||
+		' BY '||obc.authorid||' SOLD @ '||obc.Linetotal);
+END;
+---------------------------------------------------------------
+DECLARE
+TYPE   I_TABLE_TYPE    IS TABLE OF NUMBER(3)
+	INDEX BY BINARY_INTEGER;
+I_Table  I_TABLE_TYPE;
+CURSOR C_items(p_ISBNno BK_ORDERITEMS.ISBN%TYPE) is
+	SELECT *
+	FROM bk_orderitems
+	WHERE isbn = p_ISBNno;
+I_REC 	BK_ORDERITEMS%ROWTYPE;  
+c BINARY_INTEGER := 0;  
+tot NUMBER(4) := 0; 
+BEGIN
+	OPEN C_items(&I_ISBN);
+	LOOP
+		FETCH C_items INTO i_rec;
+		EXIT WHEN C_items%NOTFOUND;
+		c:=c+1;
+	i_table(c) := I_rec.quantity;
+	END LOOP;
+FOR cnt in 1..c 
+LOOP
+TOT := TOT + I_TABLE(CNT); 
+  	END LOOP;
+  	DBMS_OUTPUT.PUT_LINE('We sold: ' || TOT || ' of the book'); 
+END;		
+
+
+
+	

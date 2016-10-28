@@ -1,0 +1,26 @@
+Force activation:
+
+Press Windows key + X
+
+Click Command Prompt (Admin)
+
+
+
+At the command prompt, type the following commands:
+
+slmgr.vbs -ato
+
+
+
+Hit Enter on your keyboard
+
+Exit the command prompt
+
+
+
+Restart your computer
+
+---------------------
+j9z791jd500397k
+
+http://www.samsung.com/us/support/owners/product/NP300E5E-A01US

@@ -1,0 +1,44 @@
+CREATE OR REPLACE FUNCTION get_sal
+(p_id IN employees.employee_id%TYpe)
+return number
+IS
+  v_salary employees.salary%TYPE := 0;
+BEGIN
+  SELECT salary
+  INTO v_salary
+  FROM employees
+  WHERE employee_id = p_id;
+RETURN v_salary;
+END get_sal;
+/ 
+
+CREATE OR REPLACE FUNCTION THABISO2
+(emp_id IN s_emp.id%TYPE)
+return number 
+is
+v_salary s_emp.salary%type;
+BEGIN
+ select salary
+ into v_salary
+ from s_emp
+ WHERE id = emp_id;
+return v_salary;
+END THABISO2;
+/
+VARIABLE sal NUMBER
+EXECUTE :sal := THABISO2(23)
+PRINT sal
+
+CREATE OR REPLACE FUNCTION tax
+(p_value IN NUMBER)
+RETURN NUMBER
+IS
+_salary NUMBER
+BEGIN
+_salary := 
+ RETURN (p_value * 0.08);
+END tax;
+/
+SELECT employee_id,last_name,salary,tax(salary)
+FROM employees
+WHERE department_id = 100

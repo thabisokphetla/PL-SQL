@@ -1,0 +1,41 @@
+SET SERVEROUTPUT ON
+DECLARE 
+	TYPE emp_table_type is table of
+		employees%ROWTYPE 
+		INDEX BY BINARY_INTEGER;
+	my_emp_table emp_table_type;
+	v_count Number(3) := 104;
+BEGIN
+	FOR I IN 100..v_count
+	LOOP
+		SELECT * 
+		INTO my_emp_table(I)
+		FROM employees
+		WHERE employee_id = I;
+	END LOOP;
+	FOR I IN my_emp_table.First..my_emp_table.Last
+	LOOP
+		DBMS_OUTPUT.PUT_LINE(my_emp_table(i).last_name ||' '|| my_emp_table(i).first_name);
+	END LOOP;
+END;
+
+DECLARE 
+	TYPE emp_table is table of
+		employees.last_name%TYPE,
+		INDEX BY BINARY_INTEGER;
+	my_table emp_table;
+BEGIN
+	FOR I IN 1..5
+	LOOP
+		SELECT last_name
+		INTO my_table(i)
+		FROM Employees
+		WHERE employee_id = I + 99;
+	
+	END LOOP;
+	FOR I IN my_table.First..my_table.Last
+	LOOP
+		DBMS_OUTPUT.PUT_LINE(my_table(i));
+	END LOOP;
+END;
+

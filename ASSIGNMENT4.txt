@@ -1,0 +1,163 @@
+QUESTION1
+---------
+
+A.
+
+DECLARE
+	 v_input CHAR := &p_size;
+ 	 v_output VARCHAR2(20);
+BEGIN
+	v_output :=	
+	CASE v_input 
+		 WHEN 'S' THEN 'Small'
+		 WHEN 'M' THEN 'Medium' 
+		 WHEN 'L' THEN 'Large'
+		 ELSE 'unknown size'
+	END;
+DBMS_OUTPUT.PUT_LINE(v_output);
+END;
+/
+
+
+B.
+
+DECLARE
+	 v_input CHAR := &p_size;
+ 	 v_output VARCHAR2(12);
+BEGIN
+	v_output := 
+	CASE 
+		 WHEN v_input = 'S' THEN 'Small'
+		 WHEN v_input = 'M' THEN 'Medium' 
+		 WHEN v_input = 'L' THEN 'Large'
+		 ELSE 'UNKNOWN SIZE'
+	END;
+DBMS_OUTPUT.PUT_LINE(v_output);
+END;
+/
+
+---------------------------------------------------------------------------
+QUESTION2
+---------
+
+A.
+
+DROP TABLE messages;
+CREATE TABLE messages (results VARCHAR2 (60));
+/
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ RESULTS                                            VARCHAR2(60)
+
+B. 
+
+DEFINE p_number number
+DECLARE
+    v_counter NUMBER(2) := &p_number;
+ BEGIN
+        
+       IF v_counter = 3 OR v_counter = 4 THEN
+	  NULL;
+	    ELSE
+              INSERT INTO messages
+            VALUES(v_counter);
+      END IF;
+ COMMIT;
+ END;
+
+
+
+C.BEGIN
+   FOR i IN 1..10 LOOP
+    IF i = 3 OR i = 4 THEN
+            INSERT INTO MESSAGES
+            VALUES(i);
+    END IF;
+    COMMIT;
+   END LOOP;
+ END;
+/
+
+------------------------------------------------------------------------------------------------------------------   
+QUESTION3
+----------
+
+a)
+
+SET SERVEROUTPUT ON
+DEFINE p_staff = 11
+DECLARE 
+	v_bonus		v_sal%type;
+	v_salary	s_emp.salary%type;
+	v_comm 		v_sal%type;
+	v_income	v_sal%type;
+BEGIN
+	SELECT NVL(salary, 0), NVL(salary, 0) * NVL(commission_pct/100,0)
+	INTO   v_salary, v_comm
+	FROM   s_emp
+	WHERE  id = &staffid;	
+	IF v_salary = 0 THEN
+	   v_bonus := 0;
+	ELSIF v_salary < 1000 THEN
+	   v_bonus := 0.10 * v_salary;
+	ELSIF v_salary <= 1500 THEN
+	   v_bonus := 0.15 * v_salary;
+	ELSEIF v_salary >= 1500 THEN
+	    v_bonus := 0.20 * v_salay;
+	END IF;
+	v_income := v_salary + v_comm + v_bonus;
+	DBMS_OUTPUT.PUT_LINE('Salary is R' || v_salary || CHR(10)
+			     'Commission is R' || v_comm || CHR(10)
+			     'Bonus is R' || v_bonus || CHR(10)
+			     'Income is R' || v_income);
+END;		  
+/
+------------------------------------------------------------------------------------------------------------------   
+QUESTION4
+----------
+
+a)
+
+
+DEFINE p_custid = 210
+
+DECLARE 
+	v_message VARCHAR2(24) := 'You have palced an order';
+	v_custid s_customer.id%type;
+	v_count NUMBER(1);
+BEGIN
+	SELECT COUNT(*) 
+	INTO   v_count
+	FROM   s_customer c, s_ord o
+	WHERE c.id = v_custid
+	AND c.id = o.customer_id;
+
+	FOR i IN 1..v_count LOOP 
+		DBMS_OUTPUT.PUT_LINE(v_message);
+        END LOOP;
+END;	 
+/
+
+DEFINE p_custid = 210
+
+DECLARE 
+	v_message VARCHAR2(24) := 'You have palced an order';
+	v_custid s_customer.id%type;
+	v_counter NUMBER(2) := 1;
+	v_count NUMBER(1);
+BEGIN
+	SELECT COUNT(*) 
+	INTO   v_count
+	FROM   s_customer c, s_ord o
+	WHERE c.id = v_custid
+	AND c.id = o.customer_id;
+
+	WHILE v_counter <= v_count LOOP  
+		DBMS_OUTPUT.PUT_LINE(v_message);
+		v_counter := v_counter + 1;
+        END LOOP;
+
+END;
+/
+

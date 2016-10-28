@@ -1,0 +1,94 @@
+Question1
+
+VARIABLE g_message VARCHAR2(100)
+DECLARE 
+	v_orderNum VARCHAR2(10) := '#1';
+	v_orderDA VARCHAR2(10) := '05-JUN-10';
+	v_lastname VARCHAR2(20) := 'Neal'; 
+	v_firstname VARCHAR2(20) := 'Jones';
+BEGIN
+	:g_message :=' order '||v_orderNum||' was placed on '||v_orderDA||' by '||' '||v_firstname||' '||v_lastname;
+END;
+/
+
+QUESTION2
+				
+SET VERIFY OFF
+SET SERVEROUTPUT ON
+
+DECLARE
+	pubnumber NUMBER := &pubnumber ;
+	publisher VARCHAR2(20) := '&publisher' ;
+	contact	 VARCHAR2(20) := '&contact' ;
+	phone NUMBER := &phone;
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The new publisher '||pubnumber||' Details');
+	DBMS_OUTPUT.PUT_LINE('***********************************************');
+	DBMS_OUTPUT.PUT_LINE(' '||publisher||'; '||contact||';  '||TO_CHAR(phone,'9999999999')); 
+
+END;
+/
+==================================Nested block=====================
+SET VERIFY OFF
+SET SERVEROUTPUT ON
+
+DECLARE
+	pubnumber bk_publisher.pubid%TYPE  ;
+	publisher bk_publisher.name%TYPE    ;
+	contact	 bk_publisher.contact%TYPE   ;
+	phone bk_publisher.phone%TYPE  ;
+BEGIN
+	INSERT INTO bk_publisher( pubid,name,contact,phone)
+	VALUES (&pubnumber,'&publisher','&contact',&phone);
+DECLARE
+	pubnumber bk_publisher.pubid%TYPE  ;
+	publisher bk_publisher.name%TYPE    ;
+	contact	 bk_publisher.contact%TYPE   ;
+	phone bk_publisher.phone%TYPE  ;
+		BEGIN
+			SELECT pubid,name,contact,phone
+			INTO pubnumber,publisher,contact,phone
+			FROM bk_publisher
+			WHERE pubid = 6;
+			DBMS_OUTPUT.PUT_LINE('The new publisher '||pubnumber||' Details');
+			DBMS_OUTPUT.PUT_LINE('***********************************************');
+			DBMS_OUTPUT.PUT_LINE(' '||publisher||'; '||contact||';  '||TO_CHAR(phone,'9999999999')); 
+END;
+END;
+/
+=============================================================================================
+
+DECLARE
+	pubnumber bk_publisher.pubid%TYPE  ;
+	publisher bk_publisher.name%TYPE    ;
+	contact	 bk_publisher.contact%TYPE   ;
+	phone bk_publisher.phone%TYPE  ;
+BEGIN
+	SELECT pubid,name,contact,phone
+	INTO pubnumber,publisher,contact,phone
+	FROM bk_publisher
+	WHERE pubid = 6;
+	DBMS_OUTPUT.PUT_LINE('The new publisher '||pubnumber||' Details');
+	DBMS_OUTPUT.PUT_LINE('***********************************************');
+	DBMS_OUTPUT.PUT_LINE(' '||publisher||'; '||contact||';  '||TO_CHAR(phone,'9999999999')); 
+end;
+/
+31198
+DECLARE
+	last5isbn_number bk_books.isbn%TYPE := &last5isbn_number  ;
+	v_title bk_books.title%TYPE ;
+	v_cat bk_books.category%TYPE;
+BEGIN
+	SELECT title,category
+	INTO v_title,v_cat
+	FROM bk_books
+	WHERE SUBSTR(isbn,6,10) = last5isbn_number;
+ 	DBMS_OUTPUT.PUT_LINE('You have entered '||LPAD(last5isbn_number,10,'*'));
+	DBMS_OUTPUT.PUT_LINE('***************************');
+	DBMS_OUTPUT.PUT_LINE(' '||v_title||' '||v_cat);
+END;
+/
+SELECT title,category
+FROM bk_books
+WHERE SUBSTR(isbn,6,10) = &last5isbn_number;
+	 	

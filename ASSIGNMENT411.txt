@@ -1,0 +1,141 @@
+QUESTION1
+---------
+
+A.
+DECLARE
+	 v_input NUMBER(6) :=&p_number;
+ 	 v_output VARCHAR2(10);
+BEGIN
+	v_output :=	
+	CASE v_input 
+		 WHEN 5 THEN 'Small'
+		 WHEN 10 THEN 'Medium' 
+		 WHEN 50 THEN 'Large'
+		 ELSE 'Very Large'
+	END;
+DBMS_OUTPUT.PUT_LINE(v_output);
+END;
+/
+
+
+B.
+DECLARE
+	 v_input NUMBER(6) :=&p_number;
+ 	 v_output VARCHAR2(10);
+BEGIN
+	v_output := 
+	CASE 
+		 WHEN v_input = 5 THEN 'Small'
+		 WHEN v_input = 10 THEN 'Medium' 
+		 WHEN v_input = 50 THEN 'Large'
+		 ELSE 'Very Large'
+	END;
+DBMS_OUTPUT.PUT_LINE(v_output);
+END;
+/
+
+---------------------------------------------------------------------------
+QUESTION2
+---------
+
+A.CREATE TABLE messages (results VARCHAR2 (60));
+/
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ RESULTS                                            VARCHAR2(60)
+
+B. DECLARE
+    v_counter NUMBER := 1;
+ BEGIN
+    LOOP    
+       IF v_counter <> 6 AND v_counter <> 8 THEN
+            INSERT INTO messages(results)
+            VALUES(v_counter);
+      END IF;
+    v_counter := v_counter+1;
+ EXIT WHEN v_counter = 11;
+ END LOOP;
+ END;
+
+
+RESULTS
+------------------------------------------------------------
+1
+2
+3
+4
+5
+7
+9
+10
+
+C.BEGIN
+   FOR i IN 1..10 LOOP
+    IF i <>6 AND i<>8 THEN
+            INSERT INTO MESSAGES(results)
+            VALUES(i);
+    END IF;
+   END LOOP;
+ END;
+/
+
+------------------------------------------------------------------------------------------------------------------   
+QUESTION3
+----------
+
+a)
+
+SET SERVEROUTPUT ON
+DEFINE p_staff = 765000
+DECLARE 
+	v_bonus		NUMBER(8,2);
+	v_salary	NUMBER(8,2);
+BEGIN
+	SELECT salary
+	INTO   v_salary
+	FROM   s_staff
+	WHERE  staffnr = &staffnr;	
+	IF v_salary < 50000 THEN
+	   v_bonus := v_salary * 0.10;
+	ELSIF v_salary < 100000 THEN
+	   v_bonus := v_salary * 0.15;
+	ELSIF v_salary > 100000 THEN
+	   v_bonus := v_salary * 0.20;
+	ELSE
+	    v_bonus := 0;
+	END IF;
+	DBMS_OUTPUT.PUT_LINE('bONUS IS ' || v_bonus);
+END;		  
+/
+------------------------------------------------------------------------------------------------------------------   
+QUESTION4
+----------
+
+a)
+
+DECLARE 
+	v_message VARCHAR2(30) := 'YOU ARE REGISTERED';
+	v_count NUMBER(1);
+BEGIN
+	SELECT COUNT(subj_code) 
+	INTO   v_count
+	FROM   s_registration
+	FOR i IN 1..v_count LOOP 
+		DBMS_OUTPUT.PUT_LINE(v_message);
+        END LOOP;
+END;	 
+/
+
+
+
+DECLARE
+    v_counter NUMBER := 10;
+BEGIN
+    for i in v_counter..110 LOOP
+   dbms_output.put_line(v_counter||' ');
+   v_counter := v_counter+10;
+    end loop;
+END;
+/
+

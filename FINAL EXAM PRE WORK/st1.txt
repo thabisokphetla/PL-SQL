@@ -1,0 +1,25 @@
+SET SERVEROUTPUT ON
+DECLARE
+
+CURSOR emp_cur IS
+	SELECT last_name,first_name,count( C.id)
+	FROM s_emp e,s_customer c
+	WHERE e.id = c.sales_rep_id
+	GROUP BY last_name,first_name
+	ORDER BY count( C.id) DESC ;
+
+v_last_name s_emp.last_name%TYPE;
+v_first_name s_emp.first_name%TYPE;
+v_customers_served s_customer.id%TYPE;
+
+BEGIN 
+OPEN emp_cur;
+WHILE emp_cur%ROWCOUNT < 6 Loop
+FETCH emp_cur INTO v_last_name,v_first_name,v_customers_served;
+DBMS_OUTPUT.PUT_LINE(' '||v_last_name||' , '||v_first_name||' has '||v_customers_served||' customer(s)');
+EXIT WHEN emp_cur%NOTFOUND;
+END LOOP;
+close emp_cur;
+END;
+/
+--------------------------------------------------------------------

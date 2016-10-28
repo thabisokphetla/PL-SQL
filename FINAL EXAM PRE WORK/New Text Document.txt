@@ -1,0 +1,65 @@
+VARIABLE g_msg Varchar2(80)
+DECLARE 
+g_mark NUMBER := &mark;
+g_system Varchar2(1);
+
+BEGIN
+	 g_system :=
+	CASE
+		When g_mark >= 90 THEN 'A+'
+		WHEN g_mark >=80 THEN 'A'
+		WHEN g_mark >=70 THEN 'B'
+		WHEN g_mark >= 60 THEN 'C'
+		WHEN g_mark >=50 THEN 'D'
+		ELSE 'F'
+	END;
+:g_msg := ' '||g_mark||' resulted in symbol '||g_system; 
+END;
+/
+
+--------------------------------
+SET SERVEROUTPUT ON
+DECLARE
+ord_number varchar2(156);
+display varchar2(200);
+BEGIN
+FOR I IN 1..9 LOOP
+if I = 1 OR I = 3 OR I = 5 OR I = 9 THEN
+ord_number := 'Odd Number';
+ELSE
+ord_number := 'Even Number';
+END IF;
+if  I != 4 THEN
+ IF I != 7 then
+
+if I = 2 then
+display :='22';
+end if;
+if I = 3 then
+display :='333';
+end if;
+if I = 5 then
+display :='55555';
+end if;
+
+if I = 6 then
+display :='666666';
+end if;
+
+if I = 8 then
+display :='88888888';
+end if;
+if I = 9 then
+display :='999999999';
+end if;
+
+if I = 1 then
+display :='1';
+end if;
+
+DBMS_OUTPUT.PUT_LINE(' '||display||' '||ord_number);
+	END IF;
+END IF;
+END LOOP; 
+END;
+/

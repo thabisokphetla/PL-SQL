@@ -1,0 +1,75 @@
+variable thabiso varchar2(30);
+DECLARE
+Phetla varchar2(30) :='thabiso kgeru Phetla';
+BEGIN
+:thabiso :=phetla;
+ end;
+/
+
+variable kgeru varchar2(100);
+DECLARE 
+thabiso varchar2(100) := 'i am thabiso phetla from witbank am 21';
+Begin 
+:kgeru := thabiso;
+end;
+/
+SET SERVEROUTPUT ON
+VARIABLE updateNumber varchar2(199);
+DECLARE
+v_salary s_emp.salary%TYPE ;
+BEGIN
+Update S_emp
+SET salary = salary * 1.20
+WHERE start_date BETWEEN TRUNC(TO_DATE('01-JAN-90','DD-MON-YY'),'YEAR') AND TRUNC(TO_DATE('01-JAN-91','DD-MON-YY'),'YEAR');
+:updateNumber := 'Total number of updated salary is '||SQL%ROWCOUNT;
+END;
+
+SET SERVEROUTPUT ON
+DECLARE
+v_salary s_emp.salary%TYPE ;
+BEGIN
+Update S_emp
+SET salary = salary * 1.20
+WHERE start_date Between TO_DATE('01-JAN-90','DD-MON-YY')
+AND  TO_DATE('01-JAN-91','DD-MON-YY');
+DBMS_OUTPUT.PUT_LINE('Total number of updated salary is '||SQL%ROWCOUNT);
+END;
+
+DECLARE
+employee_id_of_manager  s_emp.manager_id%TYPE  ;
+f_name  s_emp.first_name%TYPE;
+last_n s_emp.last_name%TYPE;
+DATE_emp  s_emp.start_date%TYPE;
+id_emp s_emp.id%TYPE : = &employee_id;
+BEGIN
+
+SELECT DISTINCT ,last_name,first_name,start_date,id
+INTO last_n,f_name,DATE_emp,id_emp 
+FROM s_emp
+WHERE id_emp = employee_id;
+
+DBMS_OUTPUT.PUT_LINE('Manager '||substr(f_name,0,1)||', '||last_n );
+
+END;
+
+
+DECLARE
+employee_id_of_manager  s_emp.id%TYPE ;
+f_name  s_emp.first_name%TYPE;
+last_n s_emp.last_name%TYPE;
+DATE_emp  s_emp.start_date%TYPE;
+id_emp s_emp.id%TYPE := &employee_id ;
+BEGIN
+
+SELECT  manager_id,last_name,first_name,start_date,id
+INTO employee_id_of_manager,last_n,f_name,DATE_emp,id_emp
+FROM s_emp
+WHERE id_emp = employee_id;
+
+DBMS_OUTPUT.PUT_LINE('Manager '||substr(f_name,0,1)||', '||last_n );
+
+END;
+/
+
+
+

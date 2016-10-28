@@ -1,0 +1,52 @@
+QUESTION 1
+
+DECLARE
+	CURSOR subj_cursor(p_studnr	NUMBER) IS
+		SELECT r.studnr,s.subj_name,s.subj_fee
+		FROM s_registration r,s_subject s
+		WHERE studnr = p_studnr
+		AND r.subj_code = s.subj_code;
+	subj_record	subj_cursor%ROWTYPE;
+BEGIN 
+	FOR subj_record IN subj_cursor(&studnr) LOOP
+		DBMS_OUTPUT.PUT_LINE(subj_record.subj_name||' cost R'||subj_record.subj_fee);
+	END LOOP;
+END;	
+/
+
+
+
+DECLARE
+ CURSOR subj_cursor(p_studnr NUMBER) IS
+  SELECT r.studnr,s.subj_name,s.subj_fee
+  FROM s_registration r,s_subject s
+  WHERE studnr = p_studnr
+  AND r.subj_code = s.subj_code
+  ORDER BY s.subj_fee;
+ subj_record subj_cursor%ROWTYPE;
+BEGIN
+ OPEN subj_cursor(&p_studnr);
+	LOOP
+	 FETCH subj_cursor
+	 INTO subj_record;
+	 EXIT WHEN subj_cursor%NOTFOUND OR subj_cursor%ROWCOUNT > 3;
+ 		 DBMS_OUTPUT.PUT_LINE(subj_record.subj_name||' cost R'||subj_record.subj_fee);
+       END LOOP;
+ CLOSE subj_cursor;
+END;
+/
+
+**********************************************************************************************
+QUESTION 2
+
+
+DECLARE
+    v_sal   NUMBER(8,2) := &v_sal;
+ BEGIN
+    SELECT salary
+    INTO v_sal
+    FROM S_STAFF
+    WHERE salary = v_sal;
+ DBMS_OUTPUT.PUT_LINE('As of the '|| TO_CHAR(SYSDATE,'fmdd "of" Month YYYY') ||CHR(10)||'***********************');
+ END;
+/

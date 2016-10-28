@@ -1,0 +1,37 @@
+-------------------------------------------------------------------
+1
+SQL> VARIABLE g_answer NUMBER
+SQL> BEGIN
+  2  SELECT 100 + &p_input
+  3  INTO :g_answer
+  4  FROM DUAL;
+  5  END;
+  6  /
+Enter value for p_input: 50
+old   2: SELECT 100 + &p_input
+new   2: SELECT 100 + 50
+
+PL/SQL procedure successfully completed.
+------------------------------------------------------------------
+2
+SET SERVEROUTPUT ON
+DECLARE v_output VARCHAR2(30) NOT NULL := ' ';
+BEGIN 
+	SELECT INITCAP(Fname)|| ' '||lname
+into v_output
+FROM bk_author
+where authorid =&p_id
+DBMS_OUTPUT.PUT_LINE('The author name is '||v_output);
+END;/
+----------------------------------------------------------------------
+3
+SET SERVEROUTPUT ON 
+DECLARE 
+	V_title VARCHAR2(10) := &p_isbn;
+	v_title 
+BEGIN 
+	SELECT title
+		INTO v_title
+		from BK_BOOks
+		where isbn = v_isbn
+	DBMS_OUTPUT.PUT_LINE('The title of '||v_isbn||'is ' v_title);

@@ -1,0 +1,163 @@
+QUESTION 1
+
+DECLARE
+		v_studnr	s_registration.studnr%TYPE;
+		v_subjcode	s_registration.subj_code%TYPE;
+		CURSOR reg_cursor IS
+		SELECT studnr,subj_code
+		FROM s_registration
+		WHERE studnr = &studnr;	
+BEGIN 
+	OPEN	reg_cursor;
+	LOOP
+		FETCH reg_cursor INTO v_studnr,v_subjcode;
+		EXIT WHEN reg_cursor%NOTFOUND OR reg_cursor%ROWCOUNT < 3;
+DBMS_OUTPUT.PUT_LINE(v_studnr ||' '|| v_subjcode);
+	END LOOP;
+	CLOSE reg_cursor;
+END;
+/
+
+********************************************
+QUESTION 2
+
+DECLARE
+		v_studnr	s_registration.studnr%TYPE;
+		v_subjcode	s_registration.subj_code%TYPE;
+		v_count	NUMBER := 3;
+		CURSOR reg_cursor IS
+		SELECT COUNT(subj_code),subj_code
+		FROM s_registration
+		WHERE studnr = &studnr
+		GROUP BY subj_code;	
+BEGIN 
+	OPEN	reg_cursor;
+	LOOP
+		FETCH reg_cursor INTO v_count,v_subjcode;
+		EXIT WHEN reg_cursor%NOTFOUND;
+	DBMS_OUTPUT.PUT_LINE('Subject no is '||v_count||' '||v_subjcode);
+	END LOOP;
+	CLOSE reg_cursor;
+END;
+/
+
+*********************************************
+QUESTION 3
+
+DECLARE
+	CURSOR reg_cursor IS
+		SELECT studnr,subj_code
+		FROM s_registration
+		WHERE studnr = &studnr;
+	reg_record	reg_cursor%ROWTYPE;	
+BEGIN 
+	OPEN	reg_cursor;
+	LOOP
+		FETCH reg_cursor INTO reg_record;
+		EXIT WHEN reg_cursor%NOTFOUND;
+DBMS_OUTPUT.PUT_LINE(reg_record.studnr||' ' ||reg_record.subj_code);
+	END LOOP;
+	CLOSE reg_cursor;
+END;
+/
+*****************************************************************
+QUESTION 4
+
+
+DECLARE
+	TYPE reg_record_type IS RECORD
+		(v_studnr	s_registration.studnr%TYPE,
+		 v_subjcode	s_registration.subj_code%TYPE);
+		CURSOR reg_cursor IS
+		SELECT COUNT(subj_code),subj_code
+		FROM s_registration
+		WHERE studnr = &studnr
+		GROUP BY subj_code;
+	reg_rec	reg_record_type;	
+BEGIN 
+	OPEN	reg_cursor;
+	LOOP
+		FETCH reg_cursor INTO reg_rec;
+		EXIT WHEN reg_cursor%NOTFOUND;
+	DBMS_OUTPUT.PUT_LINE('Subject no is '||reg_cursor%ROWCOUNT||' '||reg_rec.v_subjcode);
+	END LOOP;
+	CLOSE reg_cursor;
+END;
+/
+
+
+****************************************************************************
+QUESTION 5
+
+DECLARE
+	CURSOR reg_cursor IS
+		SELECT COUNT(subj_code),subj_code
+		FROM s_registration
+		WHERE studnr = &studnr
+		GROUP BY subj_code;
+	reg_rec	reg_cursor%ROWTYPE;	
+BEGIN 
+	OPEN	reg_cursor;
+	LOOP
+		FETCH reg_cursor INTO reg_rec;
+		EXIT WHEN reg_cursor%NOTFOUND OR reg_cursor > 3;
+	DBMS_OUTPUT.PUT_LINE('Subject no is '||reg_cursor%ROWCOUNT||' '||reg_rec.subj_code);
+	END LOOP;
+	CLOSE reg_cursor;
+END;
+/
+****************************************************************************
+QUESTION 6
+
+
+
+DECLARE
+	CURSOR reg_cursor IS
+		SELECT subj_code,studnr
+		FROM s_registration;
+   	reg_record		reg_cursor%ROWTYPE;
+BEGIN 
+	FOR reg_record IN reg_cursor LOOP
+		IF reg_record.studnr = 94000001 THEN
+			DBMS_OUTPUT.PUT_LINE('Subject no is '||reg_cursor%ROWCOUNT||' '||reg_record.subj_code);
+		END IF;
+	END LOOP;
+END;
+/
+
+*****************************************************************
+QUESTION 7
+
+DECLARE
+	v_count	NUMBER := 1;
+BEGIN
+ FOR reg_record IN (SELECT studnr,subj_code
+     		    FROM s_registration) LOOP
+  IF reg_record.studnr = 94000001 THEN
+   DBMS_OUTPUT.PUT_LINE('Subject no is '||v_count||' '||reg_record.subj_code);
+	v_count := v_count + 1;
+  END IF;
+ END LOOP;
+END;
+/
+*********************************************************************
+QUESTION 8
+
+
+DECLARE
+	v_count	NUMBER := 1;
+BEGIN
+ FOR reg_record IN (SELECT r.studnr,s.subj_name
+     		    FROM s_registration r,s_subject s
+		    WHERE studnr = &studnr
+		    AND s.subj_code = r.subj_code) LOOP
+  IF reg_record.studnr = 94000001 THEN
+   DBMS_OUTPUT.PUT_LINE('Subject no is '||v_count||' '||reg_record.subj_name);
+	v_count := v_count + 1;
+  END IF;
+ END LOOP;
+END;
+/
+
+
+

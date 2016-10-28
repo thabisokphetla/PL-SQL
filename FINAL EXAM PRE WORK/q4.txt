@@ -1,0 +1,70 @@
+CREATE OR REPLACE PROCEDURE dept_info
+  (dept_id IN s_emp.dept_id%TYPE)
+IS
+ dept_name s_dept.name%TYPE;
+ v_dept_no s_dept.id%TYPE;
+BEGIN 
+  SELECT name,id
+  INTO dept_name,v_dept_no
+  FROM s_dept
+  WHERE id = dept_id ;
+  DBMS_OUTPUT.PUT_LINE ('--------------------------');
+DBMS_OUTPUT.PUT_LINE('Department ' ||v_dept_no||' information ');
+DBMS_OUTPUT.PUT_LINE ('--------------------------');
+DBMS_OUTPUT.PUT_LINE ('Name: '||dept_name);
+END dept_info ;
+/
+
+DECLARE 
+v_idd number :=50;
+BEGIN
+dept_info(v_idd);
+END;
+   
+create Or replace function Dept_emp_num
+	(v_id IN s_emp.dept%TYPE)
+return number 
+is
+	v_total_Salary number (7,2);
+	v_count number(4);
+	v_deptid s_dept.id%type;
+
+BEGIN
+	SELECT d.id,sum(salary),count(e.id)
+	INTO v_deptid,v_total_Salary,v_count 
+	FROM s_emp e,s_dept d
+	WHERE d.id = v_id
+	AND avg(salary) > (SELECT avg(m.salary) 
+				FROM s_emp e,s_emp m 
+				where e.manager_id=m.id)
+	group by d.id;
+  dbms_output.put_line('Total Employees '||v_count); 
+return v_sum; 
+end dept_emp_num;
+
+CREATE or REplace function idstuff
+		(v_id IN s_customer.id%TYPE)
+return number
+IS 
+		v_name s_customer.name%TYPE;
+		v_country s_customer.name%TYPE;
+		v_sales_rep_id s_customer.sales_rep_id%TYPE;
+BEGIN
+	SELECT name,country,sales_rep_id
+	INTO v_name,v_country, v_sales_rep_id
+	FROM s_customer
+	WHERE id = v_id;
+	dbms_output.put_line('COUNTRY: '||v_country);
+	
+	dbms_output.put_line('NAME: '||v_name);
+    return v_sales_rep_id;
+END idstuff;
+
+
+
+
+
+
+
+
+	

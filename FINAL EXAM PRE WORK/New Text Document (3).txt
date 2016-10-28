@@ -1,0 +1,9 @@
+DECLARE
+emp_record s_emp%ROWTYPE;
+
+BEGIN
+SELECT *
+INTO emp_record
+FROM s_emp
+END;
+/

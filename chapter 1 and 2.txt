@@ -1,0 +1,195 @@
+SQL> DECLARE
+  2  v_name VARCHAR2(10);
+  3  BEGIN
+  4     SELECT lname
+  5     INTO v_name
+  6     FROM bk_author
+  7     WHERE authorid = 'W100';
+  8  END;
+  9  /
+
+PL/SQL procedure successfully completed.
+
+SQL> PRINT v_name;
+
+DECLARE
+v_last_name2 bk_author.lname%TYPE;
+BEGIN
+	SELECT lname
+	INTO v_last_name2
+	FROM bk_author
+	WHERE authorid = 'A100';
+END;
+/
+
+VARIABLE 	g_salary NUMBER
+BEGIN
+	SELECT salary
+	INTO	:g_salary
+	FROM	employees
+	WHERE	employee_id = 178;
+END;
+/
+
+VARIABLE	aut VARCHAR2(4)
+BEGIN
+	SELECT authorid
+	INTO	:aut
+	FROM	bk_author
+	WHERE	lname = 'SMITH';
+END;
+/
+SET VERIFY OFF
+VARIABLE g_monthly_sal NUMBER
+DEFINE p_annual_sal = 50000
+DECLARE
+	v_sal	NUMBER(9,2) := &p_annual_sal;
+BEGIN
+:g_monthly_sal := v_sal/12;
+END;
+/
+
+SET SERVEROUTPUT ON
+DEFINE p_annual_sal = 60000
+DECLARE
+	v_sal NUMBER(9,2) := &p_annual_sal;
+BEGIN
+	v_sal := v_sal/12;
+	DBMS_OUTPUT.PUT_LINE('The Monthly salary is ' ||TO_CHAR(v_sal));
+END;
+/
+DECLARE 
+	autho VARCHAR2(4);
+BEGIN
+	SELECT authorid
+	INTO :autho
+	FROM bk_author
+	
+	WHERE lname = 'SMITH';
+	DBMS_OUTPUT.PUT_LINE('The author id for Smith is ' || TO_CHAR(autho));
+END;
+/ 
+------PRACTICAL 3--1-37-------------------------------------------------------------
+SET SERVEROUTPUT ON
+DECLARE
+ 	show_message VARCHAR2(25);
+BEGIN
+	show_message := 'My PL/SQL block works';
+	DBMS_OUTPUT.PUT_LINE(' ' || show_message);
+END;
+/
+
+ -------------PRACTICAL 4-------------------------------------------------------
+VARIABLE	v_char VARCHAR2(20)
+VARIABLE	v_num Number	
+DECLARE
+	v_char1 VARCHAR2(20) := '42 is the answer';
+	v_num1 number := TO_NUMBER(SUBSTR(v_char1,1,2),99);
+BEGIN
+:v_char := v_char1;
+:v_num := v_num1;
+END;
+/	
+--------------------------------------------------------------------
+
+SQL> DECLARE
+  2     v_char VARCHAR2(20);
+  3     v_num Number;
+  4  BEGIN
+  5     v_char := '42 is the answer';
+  6     v_num := TO_NUMBER(SUBSTR(v_char,1,2),99);
+  7  END;
+  8  /
+
+PL/SQL procedure successfully completed.
+
+-------------------2-16--------------------
+<<outer>>
+DECLARE
+	V_SAL NUMBER(7,2) := 60000;
+	V_COMM NUMBER(7,2) := V_SAL * .20;
+	V_MESSAGE VARCHAR2(255) := ' eligible for commission';
+	V_TOTAL_COMP NUMBER(7,2);
+BEGIN
+	DECLARE
+		V_SAL NUMBER(7,2) := 50000;
+		V_COMM NUMBER(7,2) := 0;
+		V_TOTAL_COMP NUMBER(7,2) := V_SAL + V_COMM;
+	BEGIN
+		V_MESSAGE := 'CLERK not ' || V_MESSAGE;
+		outer.V_COMM := V_SAL * .30;
+
+		DBMS_OUTPUT.PUT_LINE(' V_MESSAGE AT 1 IS'|| V_MESSAGE);
+		DBMS_OUTPUT.PUT_LINE(' V_COMM AT 1 IS '||V_COMM);
+		DBMS_OUTPUT.PUT_LINE(' OUTER.V_COMM AT 1 IS '||outer.V_COMM);
+	END;
+		V_MESSAGE := 'SALESMAN '||V_MESSAGE;
+DBMS_OUTPUT.PUT_LINE(' ');
+DBMS_OUTPUT.PUT_LINE(' V_TOTAL_COMP AT 2 IS '|| V_TOTAL_COMP);
+DBMS_OUTPUT.PUT_LINE(' V_COMM AT 2 IS '||V_COMM);
+DBMS_OUTPUT.PUT_LINE(' V_MESSAGE AT 2 IS '|| V_MESSAGE);
+END;
+==================================================================================
+SET SERVEROUTPUT ON
+DECLARE
+	v_weight NUMBER(3) := 600;
+	v_message VARCHAR2(255) := 'Product 10012';
+BEGIN
+	DECLARE
+		v_weight NUMBER(3) := 1;
+		v_message VARCHAR2(255) := ' Product 11001 ';
+		v_new_locn VARCHAR2(50) := ' Europe ';
+	BEGIN
+		v_weight := v_weight + 1;
+		v_new_locn := 'Western '||v_new_locn;
+
+		DBMS_OUTPUT.PUT_LINE ('THE VALUE OF v_weight at 1 is '||v_weight);
+		DBMS_OUTPUT.PUT_LINE ('THE VALUE OF v_new_locn at 1 is '||v_new_locn);
+	DBMS_OUTPUT.PUT_LINE ('-------------------------------------------------------');
+	END;
+	v_weight := v_weight + 1;
+	v_message := v_message || ' is in stock';
+
+	DBMS_OUTPUT.PUT_LINE ('THE VALUE OF v_weight at 2 is '||v_weight);
+	DBMS_OUTPUT.PUT_LINE ('THE VALUE OF v_message at 2 is ' || v_message);
+
+END; 
+
+==============================practical 2 3=================================================
+SET VERIFY OFF 
+DEFINE p_num1 = 2
+DEFINE p_num2 = 4
+VARIABLE results NUMBER
+DECLARE
+	results NUMBER := &p_num1 / &p_num2;
+BEGIN
+	:results := results + &p_num2;
+END;
+VARIABLE total_comp NUMBER(10,2)
+==========================================================================================
+SET VERIFY Off
+SET SERVEROUTPUT ON
+DEFINE p_salary = NULL
+DEFINE p_bonus = 10
+DECLARE
+	p_bonus NUMBER(10,2) := &p_bonus / 100;
+	p_salary NUMBER(10,2) := NVL(&p_salary,0);
+	total_comp NUMBER(10,2);
+BEGIN
+	total_comp := p_salary * p_bonus;
+DBMS_OUTPUT.PUT_LINE('THE TOTAL COMP IS '||total_comp);
+END;
+==============================================================================
+BINDING METHOD VARIABLE 
+SET VERIFY Off
+SET SERVEROUTPUT ON
+DEFINE p_salary =60000
+DEFINE p_bonus = 10
+VARIABLE total_comp NUMBER(10,2)
+DECLARE
+	p_bonus NUMBER(10,2) := &p_bonus / 100;
+	p_salary NUMBER(10,2) := NVL(&p_salary,0);
+	total_comp NUMBER(10,2);
+BEGIN
+	:total_comp := p_salary * p_bonus;
+END;

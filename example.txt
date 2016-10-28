@@ -1,0 +1,90 @@
+DECLARE 
+	v_empno employees.employee_id%TYPE;
+	v_ename employees.last_name%TYPE;
+	CURSOR emp_cursor IS
+		SELECT employee_id,last_name
+		FROM employees;
+BEGIN
+	OPEN emp_cursor;
+	
+		FETCH emp_cursor INTO v_empno, v_ename;
+		
+		DBMS_OUTPUT.PUT_LINE(TO_CHAR(v_empno)||' '||v_ename);
+	
+	CLOSE emp_cursor;
+END;
+
+SQL> SET SERVEROUTPUT ON
+SQL> DECLARE
+  2     v_pro_id s_item.product_id%TYPE := &p_ord_id;
+  3     v_quantity s_item.quantity%TYPE;
+  4     v_count number := 1;
+  5  CURSOR ord_cursor IS
+  6     SELECT product_id,quantity
+  7     FROM s_item;
+  8  BEGIN
+  9     OPEN ord_cursor;
+ 10      loop
+ 11     FETCH ord_cursor INTO v_pro_id,v_quantity;
+ 12
+ 13     DBMS_OUTPUT.PUT_LINE('Item '||v_count||' '||v_quantity||' of '||v_pro_id
+);
+ 14
+ 15     v_count := v_count + 1;
+ 16     END LOOP;
+ 17     CLOSE ord_cursor;
+ 18  END;
+ 19  /
+Enter value for p_ord_id: 100
+old   2:        v_pro_id s_item.product_id%TYPE := &p_ord_id;
+new   2:        v_pro_id s_item.product_id%TYPE := 100;
+
+----------------------------------------------------------------------
+DEFINE product_code = 41100
+
+DECLARE
+   TYPE product_record_type IS RECORD
+   (p_name s_product.name%TYPE, 
+    p_short_desc s_product.short_desc%TYPE, 
+    i_amount_in_stock s_inventory.amount_in_stock%TYPE, 
+    i_restock_date s_inventory.restock_date%TYPE, 
+    i_reorder_point s_inventory.reorder_point%TYPE, 
+    r_name s_region.name%TYPE, 
+    e_last_name s_emp.last_name%TYPE, 
+    e_first_name s_emp.first_name%TYPE); 
+   product_record product_record_type; 
+BEGIN
+   SELECT p.name,p.short_desc,i.amount_in_stock,NVL(i.restock_date,0) ,i.reorder_point,r.name,e.last_name,e.first_name 
+   INTO product_record
+   FROM s_inventory i,s_product p,s_warehouse w,s_region r,s_emp e
+   WHERE i.product_id = p.id
+   AND i.warehouse_id = w.id
+   AND w.region_id = r.id
+   AND w.manager_id = e.id
+   AND p.id = &product_code
+   AND i.amount_in_stock = i.reorder_point;
+   
+   
+ 
+DBMS_OUTPUT.PUT_LINE('PRODUCT RE-ORDER REPORT');
+   DBMS_OUTPUT.PUT_LINE('======================');
+   DBMS_OUTPUT.PUT_LINE('Name:         '||product_record.p_name); 
+   DBMS_OUTPUT.PUT_LINE('Description:  '||product_record.p_short_desc); 
+   DBMS_OUTPUT.PUT_LINE('In Stock:     '||product_record.i_amount_in_stock||'    Re-order Point: '||product_record.i_reorder_point); 
+   DBMS_OUTPUT.PUT_LINE('Restock Date: '||product_record.i_restock_date); 
+   DBMS_OUTPUT.PUT_LINE('Region:       '||product_record.r_name); 
+   DBMS_OUTPUT.PUT_LINE('Managed by:   '||product_record.e_first_name||' '||product_record.e_last_name); 
+
+END;
+/
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,29 @@
+SET SERVEROUTPUT ON
+DECLARE
+CURSOR salary_cur(v_dept s_emp.dept_id%TYPE) IS
+	SELECT *
+	FROM s_emp
+	WHERE dept_id = v_dept
+	FOR UPDATE OF salary NOWAIT;
+
+cur_record salary_cur%ROWTYPE;
+new_salary s_emp.salary%TYPE;
+BEGIN
+OPEN salary_cur(&v_dept );
+
+LOOP
+FETCH salary_cur INTO cur_record;
+EXIT WHEN salary_cur%NOTFOUND;
+
+DBMS_OUTPUT.PUT_LINE(' '||cur_record.last_name||' -> salary = '||cur_record.salary );
+new_salary := cur_record.salary * 1.15;
+UPDATE s_emp
+SET salary  = new_salary
+where current of salary_cur;
+DBMS_OUTPUT.PUT_LINE(' '||cur_record.last_name||' ->New salary = '||new_salary);
+
+EXIT WHEN salary_cur%NOTFOUND;
+END LOOP; 
+CLOSE salary_cur;
+END;
+/

@@ -1,0 +1,42 @@
+revision 
+a
+DECLAR 
+	v_name bk_publisher.name%TYPE:
+BEGIN
+	NULL;
+END;
+/
+
+b 
+DECLARE
+	v_name bk_books.title%TYPE := 'Oracle9i in 21 Days';
+BEGIN 
+	NULL
+END;
+/
+
+c
+DECLARE
+	v_date DATE DEFUALT sysdate
+BEGIN
+	NULL
+END;
+/
+q3
+VARIABLE g_message VARCHAR2(100)
+BEGIN
+	:g_message := 'Today is '||TO_CHAR(sysdate,'fmDay ,DD Month YYYY')||
+		'and it is now ' ||TO_CHAR(sysdate,'hh24:mi:ss');
+END;
+/
+PRINT g_message;
+
+q3
+SET SERVEROUTPUT ON
+DECLARE
+	v_sal NUMBER(6,2) := &p_sal;
+	v_new_sal NUMBER(6,2);-- OR v_sal%TYPE
+BEGIN
+	v_new_sal := v_sal * 1.075;
+	DBMA_OUTPUT.PUT_LINE('Your current salary is R '||v_sal||
+				'and you increased salary'||v_new_sal)

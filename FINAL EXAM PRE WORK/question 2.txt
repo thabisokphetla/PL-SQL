@@ -1,0 +1,21 @@
+DECLARE
+CURSOR cust_cur IS
+	SELECT NAME ,id,CITY,country
+	FROM s_customer
+	WHERE credit_rating =( select credit_rating from s_customer where name = 'Hamada Sport');
+cust_record cust_cur%ROWTYPE;
+BEGIN 
+OPEN cust_cur ;
+DBMS_OUTPUT.PUT_LINE('Customer Information');
+DBMS_OUTPUT.PUT_LINE('********************');
+LOOP
+FETCH cust_cur  INTO cust_record;
+DBMS_OUTPUT.PUT_LINE('Name: '||cust_record.name||' '||cust_record.id);
+DBMS_OUTPUT.PUT_LINE('City: '||cust_record.city);
+DBMS_OUTPUT.PUT_LINE('Country: '||cust_record.country);
+DBMS_OUTPUT.PUT_LINE('************************'); 
+EXIT WHEN cust_cur%ROWCOUNT > 4;
+END LOOP;
+Close cust_cur;
+END;
+/

@@ -1,0 +1,86 @@
+QUESTION1
+
+SET SERVEROUTPUT ON
+
+BEGIN 
+	DBMS_OUTPUT.PUT_LINE('ITU LEDWABA' || CHR(10) || 'PO BOX 17' || CHR(10) || 'BOLEU' || CHR(10) || '0474');
+END;
+/
+
+OR
+
+DECLARE V_OUT VARCHAR2(50);
+
+BEGIN  
+	v_out := 'ITU LEDWABA' || CHR(10) || 'PO BOX 17' || CHR(10) || 'BOLEU' || CHR(10) || '0474';
+	DBMS_OUTPUT.PUT_LINE(v_out);
+END;
+
+-------------------------------------------------------------------------------------------------------------------
+QUESTION2
+
+VARIABLE g_out VARCHAR2(80);
+DECLARE
+	 v_studnr NUMBER(10);
+BEGIN
+ SELECT INITCAP(surname) || ',' || INITIALS || ' celebrate his/her birthday on'
+        || TO_DATE(birthdate,'fmdd Month YYYY')
+ INTO :g_out
+ FROM s_student
+ WHERE studnr = &studnr;
+END;
+/
+
+----------------------------------------------------------------------------------------------------------------------
+QUESTION3
+
+
+VARIABLE g_out VARCHAR2(80);
+DECLARE
+	 v_studnr NUMBER(10);
+BEGIN
+ SELECT initials ||' ' || UPPER(surname) || ', a ' 
+        || DECODE(SEX,'F','female','M','male') 
+        || ' registered for ' || COUNT(subj_code) || ' subjects'
+ INTO :g_out
+ FROM s_student S, s_registration e
+ WHERE s.studnr = e.studnr
+ AND s.studnr = &studnr
+ GROUP BY initials,surname,sex;
+END;
+/
+
+PRINT
+
+G_OUT
+--------------------------------------------------------------------------------
+VM SMITH a male, registered for 3 subjects
+----------------------------------------------------------------------------------------------------------------------
+QUESTION4
+
+
+DECLARE
+	v_initials s_staff.initials%TYPE;
+	v_surname s_staff.surname%TYPE;
+	v_income s_staff.income%TYPE;
+BEGIN
+	SELECT initials,INITCAP(surname)
+
+/
+
+
+QUESTION5
+---------
+
+DECLARE
+	v_lecturer	VARCHAR2(20);
+	v_number	NUMBER(2);
+	v_staffnumber	s.staff.staffnr%TYPE := &g_staffnr;
+BEGIN 
+	SELECT initials|| ' '||surname,COUNT(*)
+	INTO v_lecturer,v_number	
+	FROM S_STAFF s,S_LECTURER l
+	WHERE s.staffnr =l.v_staffnumber	
+	
+
+:g_out := '

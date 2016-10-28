@@ -1,0 +1,21 @@
+
+BEGIN 
+	INSERT INTO s_customer
+	VALUES
+	(s_customer_id.NextVal,'TUT Sporting','(012) 382 0628','TUT Number 1',
+	'Pretoria','Gauteng','South Africa','0001','GOOD',NULL,3,NULL);
+DBMS_OUTPUT.PUT_LINE(' '||SQL%ROWCOUNT||' Customer added');
+	
+END;
+/
+
+DECLARE
+
+BEGIN 
+
+UPDATE s_customer
+SET Phone = '26461240555',address ='10 Tienie Louw Street',CIty ='Windhoek',state = 'Khomas Highland',zip_code = '9000'
+WHERE id = 216 ;
+ DBMS_OUTPUT.PUT_LINE(' '||SQL%ROWCOUNT||' Customer altered');
+END;
+/

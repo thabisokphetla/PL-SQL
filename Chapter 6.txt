@@ -1,0 +1,187 @@
+Assignment 6
+=============================================
+1.
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+DECLARE
+	v_ord_id s_item.ord_id%TYPE := &p_ord_id;
+	v_pro_id s_item.product_id%TYPE ;
+	v_quantity s_item.quantity%TYPE;
+	v_item_id s_item.item_id%TYPE;
+	v_name s_product.name%TYPE;
+	v_count number := 1;
+CURSOR ord_cursor IS
+	SELECT item.product_id,item.quantity,na.name,item.item_id
+	FROM s_item item,s_product na
+	WHERE ord_id = v_ord_id
+	AND item.product_id = na.id ;
+BEGIN 
+	OPEN ord_cursor;
+  	loop
+	FETCH ord_cursor INTO v_pro_id,v_quantity,v_name,v_item_id ;
+	
+	DBMS_OUTPUT.PUT_LINE('Item '||v_item_id||' '||v_quantity||' of '||
+				v_pro_id||'('||v_name||') ordered');
+		v_count := v_count + 1;	
+	EXIT WHEN v_count > 7;
+	END LOOP;
+
+	CLOSE ord_cursor;
+END;
+
+===========================================
+2 and parameters
+DECLARE 
+v_ord_id s_item.ord_id%TYPE := &p_ord_id;
+	v_quantity s_item.quantity%TYPE;
+	v_product_id s_item.product_id%TYPE;
+	v_name s_product.name%TYPE;
+	v_count number := 1;
+CURSOR ord_cursor(v_ord_id  NUMBER) IS
+	SELECT item.quantity,item.product_id,prod.name
+	FROM s_item item,s_product prod
+	WHERE  ord_id = v_ord_id
+ 	AND item.product_id = prod.id;
+	 
+BEGIN
+	OPEN ord_cursor(v_ord_id);
+IF ord_cursor%ISOPEN THEN
+	WHILE ord_cursor%ROWCOUNT <3 LOOP
+	FETCH ord_cursor INTO v_quantity,v_product_id,v_name;
+	
+	DBMS_OUTPUT.PUT_LINE('Item '||ord_cursor%ROWCOUNT||' '||v_quantity||' of '||
+				v_product_id||'('||v_name||') ordered');
+	v_count := v_count + 1;
+	END LOOP;
+	CLOSE ord_cursor;
+ELSE 
+	DBMS_OUTPUT.PUT_LINE('NOT OPEN DUDE');
+END IF;
+END;
+=====================================================
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+DECLARE
+	v_ord_id s_item.ord_id%TYPE := &p_ord_id;
+	v_pro_id s_item.product_id%TYPE ;
+	v_quantity s_item.quantity%TYPE;
+	v_item_id s_item.item_id%TYPE;
+	v_name s_product.name%TYPE;
+
+CURSOR ord_cursor IS
+	SELECT item.product_id,item.quantity,na.name
+	FROM s_item item,s_product na
+	WHERE ord_id = v_ord_id
+	AND item.product_id = na.id ;
+BEGIN 
+	OPEN ord_cursor;
+  	FOR I IN 1..7 loop
+	FETCH ord_cursor INTO v_pro_id,v_quantity,v_name ;
+	
+	DBMS_OUTPUT.PUT_LINE('Item '||I||' '||v_quantity||' of '||
+				v_pro_id||'('||v_name||') ordered');
+			
+	
+ END LOOP;
+	CLOSE ord_cursor;
+END;
+=============================================================
+3
+DECLARE 
+	v_ord_id s_item.ord_id%TYPE := &p_ord_id;
+	CURSOR ord_cursor IS
+	SELECT quantity,product_id
+	FROM s_item;
+	item_record ord_cursor%ROWTYPE;
+BEGIN
+	OPEN ord_cursor;
+	WHILE ord_cursor%ROWCOUNT < 7 LOOP
+	FETCH ord_cursor INTO item_record;
+	DBMS_OUTPUT.PUT_LINE('Item '||ord_cursor%ROWCOUNT||': '||
+				item_record.quantity||' of '||
+				item_record.product_id||' ordered');
+	END LOOP;
+	CLOSE ord_cursor
+END; 
+==========================================================
+4
+DECLARE
+	TYPE ord_cur_record IS RECORD(
+	v_quantity s_item.quantity%TYPE,
+	v_product s_item.product_id%TYPE,
+	v_name s_product.name%TYPE);
+	v_ord_id s_item.ord_id%TYPE := &p_ord;
+	CURSOR ord_cursor IS
+	SELECT i.quantity,i.product_id,p.name
+	FROM s_item i,s_product p
+	WHERE i.ord_id = v_ord_id
+	AND i.product_id = p.id;
+	 order_cur ord_cur_record;
+BEGIN
+	OPEN ord_cursor;
+	WHILE ord_cursor%ROWCOUNT < 7 LOOP
+	FETCH ord_cursor INTO order_cur ;
+	DBMS_OUTPUT.PUT_LINE('Item '|| ord_cursor%ROWCOUNT||': '||
+				order_cur.v_quantity||' of '||
+				order_cur.v_product||'('||
+				order_cur.v_name||')');
+	END LOOP;
+	CLOSE ord_cursor;
+END;
+-------------------------------------------------------------------
+5
+DECLARE
+	TYPE ord_cur_record IS RECORD(
+	v_quantity s_item.quantity%TYPE,
+	v_product s_item.product_id%TYPE,
+	v_name s_product.name%TYPE);
+	v_ord_id s_item.ord_id%TYPE := &p_ord;
+	CURSOR ord_cursor IS
+	SELECT i.quantity,i.product_id,p.name
+	FROM s_item i,s_product p
+	WHERE i.ord_id = v_ord_id
+	AND i.product_id = p.id;
+
+	 order_cur ord_cur_record;
+BEGIN
+	OPEN ord_cursor;
+	FOR i IN 1..7 LOOP
+	FETCH ord_cursor INTO order_cur ;
+	DBMS_OUTPUT.PUT_LINE('Item '|| ord_cursor%ROWCOUNT||': '||
+				order_cur.v_quantity||' of '||
+				order_cur.v_product||'('||
+				order_cur.v_name||')');
+	END LOOP;
+	CLOSE ord_cursor;
+END;
+=====================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
